@@ -3,9 +3,9 @@ module Theorems (A : Set) where
 open import Graph A
 open import Reasoning A
 
-+pre-idempotence : ∀ x -> x ≡ x + x + ε
-+pre-idempotence x =
-  begin
++pre-idempotence : ∀ x -> x + x + ε ≡ x
++pre-idempotence x = symmetry
+  (begin
     x                     ≡⟨ symmetry *right-identity  ⟩
     x * ε                 ≡⟨ symmetry *right-identity  ⟩
     x * ε * ε             ≡⟨ decomposition             ⟩
@@ -13,20 +13,22 @@ open import Reasoning A
     x * ε + x * ε + ε     ≡⟨ +lc (+rc *right-identity) ⟩
     x * ε + x + ε         ≡⟨ +lc (+lc *right-identity) ⟩
     x + x + ε
-  ∎
+  ∎)
 
-+identity : ∀ x -> x ≡ x + ε
-+identity x =
-  begin
-    x                       ≡⟨ +pre-idempotence x                  ⟩
-    (x + x) + ε             ≡⟨ +rc (+pre-idempotence ε)            ⟩
++identity : ∀ x -> x + ε ≡ x
++identity x = symmetry
+  (begin
+    x                       ≡⟨ symmetry (+pre-idempotence x)       ⟩
+    (x + x) + ε             ≡⟨ +rc (symmetry (+pre-idempotence ε)) ⟩
     (x + x) + ((ε + ε) + ε) ≡⟨ +associativity                      ⟩
     ((x + x) + (ε + ε)) + ε ≡⟨ +lc +associativity                  ⟩
     (((x + x) + ε) + ε) + ε ≡⟨ +lc (+lc (symmetry +associativity)) ⟩
     ((x + (x + ε)) + ε) + ε ≡⟨ +lc (+lc (+rc +commutativity))      ⟩
     ((x + (ε + x)) + ε) + ε ≡⟨ +lc (+lc +associativity)            ⟩
     (((x + ε) + x) + ε) + ε ≡⟨ +lc (symmetry +associativity)       ⟩
-    ((x + ε) + (x + ε)) + ε ≡⟨ symmetry (+pre-idempotence (x + ε)) ⟩
+    ((x + ε) + (x + ε)) + ε ≡⟨ +pre-idempotence (x + ε)            ⟩
     x + ε
-  ∎
+  ∎)
 
++idempotence : ∀ x -> x + x ≡ x
++idempotence x = transitivity (symmetry (+identity (x + x))) (+pre-idempotence x)
