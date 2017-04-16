@@ -1,6 +1,6 @@
 module API where
 
-open import Graph
+open import Algebra
 open import Prelude
 
 empty : ∀ {A} -> Graph A

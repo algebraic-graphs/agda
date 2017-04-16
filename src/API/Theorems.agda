@@ -1,10 +1,10 @@
-module API.Laws where
+module API.Theorems where
 
+open import Algebra
+open import Algebra.Theorems
 open import API
-open import Graph
 open import Prelude
 open import Reasoning
-open import Theorems
 
 -- vertices [x] == vertex x
 vertices-vertex : ∀ {A} {x : A} -> vertices (x :: []) ≡ vertex x
@@ -18,4 +18,4 @@ vertices-clique {a} {_ :: t} = ⊆transitivity (⊆right-monotony (vertices-cliq
 -- clique (xs ++ ys) == connect (clique xs) (clique ys)
 connect-clique : ∀ {A} {xs ys : List A} -> clique (xs ++ ys) ≡ connect (clique xs) (clique ys)
 connect-clique {_} {[]}     = symmetry *left-identity
-connect-clique {a} {h :: t} = R (connect-clique {a} {t}) >> *associativity
+connect-clique {a} {_ :: t} = R (connect-clique {a} {t}) >> *associativity

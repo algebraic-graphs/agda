@@ -18,6 +18,10 @@ data List (A : Set) : Set where
 
 infixr 20 _::_
 
+_++_ : ∀ {A} -> List A -> List A -> List A
+[] ++ l = l
+(x :: xs) ++ l = x :: (xs ++ l)
+
 foldr : ∀ {A B : Set} -> (A -> B -> B) -> B -> List A -> B
 foldr f b [] = b
 foldr f b (x :: xs) = f x (foldr f b xs)
@@ -25,7 +29,3 @@ foldr f b (x :: xs) = f x (foldr f b xs)
 map : ∀ {A B} -> (A -> B) -> List A -> List B
 map f [] = []
 map f (x :: xs) = f x :: map f xs
-
-_++_ : ∀ {A} -> List A -> List A -> List A
-[] ++ l = l
-(x :: xs) ++ l = x :: (xs ++ l)

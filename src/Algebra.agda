@@ -1,4 +1,4 @@
-module Graph where
+module Algebra where
 
 -- Core graph construction primitives
 data Graph (A : Set) : Set where

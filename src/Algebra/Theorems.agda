@@ -1,6 +1,6 @@
-module Theorems where
+module Algebra.Theorems where
 
-open import Graph
+open import Algebra
 open import Reasoning
 
 +pre-idempotence : ∀ {A} {x : Graph A} -> x + x + ε ≡ x
