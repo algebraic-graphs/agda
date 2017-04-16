@@ -1,0 +1,15 @@
+sudo: required
+
+language: ruby
+
+services:
+- docker
+
+before_install:
+- docker pull scottfleischman/agda:2.5.2
+
+env:
+- AGDA_FILE="src/Theorems.agda"
+
+script:
+- docker run -v $TRAVIS_BUILD_DIR:/opt/agda-build scottfleischman/agda:2.5.2 /bin/sh -c 'cd /opt/agda-build; agda '$AGDA_FILE
