@@ -32,3 +32,13 @@ open import Reasoning A
 
 +idempotence : ∀ {x} -> x + x ≡ x
 +idempotence = transitivity (symmetry +identity) +pre-idempotence
+
+absorption : ∀ {x y} -> x * y + x + y ≡ x * y
+absorption {x} {y} =
+  begin
+    (x * y + x) + y         ≡⟨ L (R (symmetry *right-identity)) ⟩
+    (x * y + x * ε) + y     ≡⟨ R (symmetry *right-identity)     ⟩
+    (x * y + x * ε) + y * ε ≡⟨ symmetry decomposition           ⟩
+    (x * y) * ε             ≡⟨ *right-identity                  ⟩
+    x * y
+  ∎
