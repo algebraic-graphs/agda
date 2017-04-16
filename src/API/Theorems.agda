@@ -7,7 +7,7 @@ open import Prelude
 open import Reasoning
 
 -- vertices [x] == vertex x
-vertices-vertex : ∀ {A} {x : A} -> vertices (x :: []) ≡ vertex x
+vertices-vertex : ∀ {A} {x : A} -> vertices [ x ] ≡ vertex x
 vertices-vertex = +identity >> reflexivity
 
 -- vertices xs ⊆ clique xs

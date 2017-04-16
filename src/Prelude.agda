@@ -17,6 +17,10 @@ data List (A : Set) : Set where
   _::_ : A -> List A -> List A
 
 infixr 20 _::_
+infixr 15 _++_
+
+[_] : ∀ {A} -> A -> List A
+[ x ] = x :: []
 
 _++_ : ∀ {A} -> List A -> List A -> List A
 [] ++ l = l
@@ -29,3 +33,8 @@ foldr f b (x :: xs) = f x (foldr f b xs)
 map : ∀ {A B} -> (A -> B) -> List A -> List B
 map f [] = []
 map f (x :: xs) = f x :: map f xs
+
+zip : ∀ {A B} -> List A -> List B -> List (A × B)
+zip [] _                = []
+zip _  []               = []
+zip (x :: xs) (y :: ys) = (x , y) :: zip xs ys

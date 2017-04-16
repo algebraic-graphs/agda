@@ -27,11 +27,36 @@ connects = foldr connect empty
 vertices : ∀ {A} -> List A -> Graph A
 vertices = overlays ∘ map vertex
 
-clique : ∀ {A} -> List A -> Graph A
-clique = connects ∘ map vertex
-
 edges : ∀ {A} -> List (A × A) -> Graph A
 edges = overlays ∘ map (uncurry edge)
 
 graph : ∀ {A} -> List A -> List (A × A) -> Graph A
 graph vs es = overlay (vertices vs) (edges es)
+
+foldg : ∀ {A} {B : Set} -> B -> (A -> B) -> (B -> B -> B) -> (B -> B -> B) -> Graph A -> B
+foldg {A} {B} e w o c = go
+  where
+    go : Graph A -> B
+    go ε       = e
+    go (v x)   = w x
+    go (x + y) = o (go x) (go y)
+    go (x * y) = c (go x) (go y)
+
+path : ∀ {A} -> List A -> Graph A
+path []        = empty
+path (x :: []) = vertex x
+path (x :: xs) = edges (zip (x :: xs) xs)
+
+circuit : ∀ {A} -> List A -> Graph A
+circuit []        = empty
+circuit (x :: xs) = path ([ x ] ++ xs ++ [ x ])
+
+clique : ∀ {A} -> List A -> Graph A
+clique = connects ∘ map vertex
+
+biclique : ∀ {A} -> List A -> List A -> Graph A
+biclique xs ys = connect (vertices xs) (vertices ys)
+
+star : ∀ {A} -> A -> List A -> Graph A
+star x ys = connect (vertex x) (vertices ys)
+
