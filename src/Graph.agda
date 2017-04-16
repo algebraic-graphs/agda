@@ -1,9 +1,9 @@
-module Graph (V : Set) where
+module Graph (A : Set) where
 
 -- Core graph construction primitives
 data Graph : Set where
     ε   : Graph                   -- Empty graph
-    [_] : V -> Graph              -- Graph comprising a single vertex
+    [_] : A -> Graph              -- Graph comprising a single vertex
     _+_ : Graph -> Graph -> Graph -- Overlay two graphs
     _*_ : Graph -> Graph -> Graph -- Connect two graphs
 
@@ -57,4 +57,3 @@ L {connect} {x} {y} {z} eq = *left-congruence {x} {y} {z} eq
 R : ∀ {op : BinaryOperator} -> ∀ {x y z} -> x ≡ y -> apply op z x ≡ apply op z y
 R {overlay} {x} {y} {z} eq = +right-congruence {x} {y} {z} eq
 R {connect} {x} {y} {z} eq = *right-congruence {x} {y} {z} eq
-
