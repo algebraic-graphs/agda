@@ -24,17 +24,17 @@ _>>_ : ∀ {A} {x y z : Graph A} -> x ≡ y -> y ≡ z -> x ≡ z
 _>>_ = transitivity
 
 data BinaryOperator : Set where
-  overlay : BinaryOperator
-  connect : BinaryOperator
+  +op : BinaryOperator
+  *op : BinaryOperator
 
 apply : ∀ {A} -> BinaryOperator -> Graph A -> Graph A -> Graph A
-apply overlay a b = a + b
-apply connect a b = a * b
+apply +op a b = a + b
+apply *op a b = a * b
 
 L : ∀ {op : BinaryOperator} -> ∀ {A} {x y z : Graph A} -> x ≡ y -> apply op x z ≡ apply op y z
-L {overlay} {x} {y} {z} eq = +left-congruence {x} {y} {z} eq
-L {connect} {x} {y} {z} eq = *left-congruence {x} {y} {z} eq
+L {+op} {x} {y} {z} eq = +left-congruence {x} {y} {z} eq
+L {*op} {x} {y} {z} eq = *left-congruence {x} {y} {z} eq
 
 R : ∀ {op : BinaryOperator} -> ∀ {A} {x y z : Graph A} -> x ≡ y -> apply op z x ≡ apply op z y
-R {overlay} {x} {y} {z} eq = +right-congruence {x} {y} {z} eq
-R {connect} {x} {y} {z} eq = *right-congruence {x} {y} {z} eq
+R {+op} {x} {y} {z} eq = +right-congruence {x} {y} {z} eq
+R {*op} {x} {y} {z} eq = *right-congruence {x} {y} {z} eq

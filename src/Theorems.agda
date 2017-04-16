@@ -77,8 +77,8 @@ absorption {_} {x} {y} =
 ⊆connect : ∀ {A} {x y : Graph A} -> (x + y) ⊆ (x * y)
 ⊆connect = +commutativity >> +associativity >> absorption
 
-⊆overlay-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (x + z) ⊆ (y + z)
-⊆overlay-monotony {_} {x} {y} {z} p =
+⊆left-overlay-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (x + z) ⊆ (y + z)
+⊆left-overlay-monotony {_} {x} {y} {z} p =
   begin
     (x + z) + (y + z) ≡⟨ symmetry +associativity     ⟩
     x + (z + (y + z)) ≡⟨ R +commutativity            ⟩
@@ -87,6 +87,18 @@ absorption {_} {x} {y} =
     x + (y + z)       ≡⟨ +associativity              ⟩
     (x + y) + z       ≡⟨ L p                         ⟩
     y + z
+  ∎
+
+⊆right-overlay-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (z + x) ⊆ (z + y)
+⊆right-overlay-monotony {_} {x} {y} {z} p =
+  begin
+    (z + x) + (z + y) ≡⟨ +associativity          ⟩
+    ((z + x) + z) + y ≡⟨ L +commutativity        ⟩
+    (z + (z + x)) + y ≡⟨ L +associativity        ⟩
+    ((z + z) + x) + y ≡⟨ L (L +idempotence)      ⟩
+    (z + x) + y       ≡⟨ symmetry +associativity ⟩
+    z + (x + y)       ≡⟨ R p                     ⟩
+    z + y
   ∎
 
 ⊆left-connect-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (x * z) ⊆ (y * z)
@@ -104,3 +116,11 @@ absorption {_} {x} {y} =
     z * (x + y)       ≡⟨ R p                          ⟩
     z * y
   ∎
+
+⊆left-monotony : ∀ {A} {op : BinaryOperator} {x y z : Graph A} -> x ⊆ y -> apply op x z ⊆ apply op y z
+⊆left-monotony {_} {+op} {x} {y} {z} p = ⊆left-overlay-monotony p
+⊆left-monotony {_} {*op} {x} {y} {z} p = ⊆left-connect-monotony p
+
+⊆right-monotony : ∀ {A} {op : BinaryOperator} {x y z : Graph A} -> x ⊆ y -> apply op z x ⊆ apply op z y
+⊆right-monotony {_} {+op} {x} {y} {z} p = ⊆right-overlay-monotony p
+⊆right-monotony {_} {*op} {x} {y} {z} p = ⊆right-connect-monotony p
