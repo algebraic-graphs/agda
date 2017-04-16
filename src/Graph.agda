@@ -7,9 +7,10 @@ data Graph : Set where
     _+_ : Graph -> Graph -> Graph -- Overlay two graphs
     _*_ : Graph -> Graph -> Graph -- Connect two graphs
 
-infixl 8 _+_
-infixl 9 _*_
-infixl 4 _≡_
+infixl 4  _≡_
+infixl 8  _+_
+infixl 9  _*_
+infix  10 _⊆_
 
 -- Equational theory of graphs
 data _≡_ : (x : Graph) -> (y : Graph) -> Set where
@@ -37,6 +38,9 @@ data _≡_ : (x : Graph) -> (y : Graph) -> Set where
     left-distributivity  : ∀ {x y z} -> x * (y + z) ≡ x * y + x * z
     right-distributivity : ∀ {x y z} -> (x + y) * z ≡ x * z + y * z
     decomposition        : ∀ {x y z} -> x * y * z   ≡ x * y + x * z + y * z
+
+_⊆_ : Graph -> Graph -> Set
+x ⊆ y = x + y ≡ y
 
 data BinaryOperator : Set where
   overlay : BinaryOperator

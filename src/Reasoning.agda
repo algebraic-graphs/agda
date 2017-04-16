@@ -18,3 +18,7 @@ _ ≡⟨ p ⟩ prove q = prove (transitivity p q)
 infix 3 _∎
 _∎ : (x : Graph) -> x ≈ x
 _∎ _ = prove reflexivity
+
+infixl 8 _>>_
+_>>_ : ∀ {x y z} -> x ≡ y -> y ≡ z -> x ≡ z
+_>>_ = transitivity

@@ -51,3 +51,56 @@ absorption {x} {y} =
     (x * y) * ε             ≡⟨ *right-identity                  ⟩
     x * y
   ∎
+
+-- Subgraph relation
+⊆reflexivity : ∀ {x} -> x ⊆ x
+⊆reflexivity = +idempotence
+
+⊆antisymmetry : ∀ {x y} -> x ⊆ y -> y ⊆ x -> x ≡ y
+⊆antisymmetry p q = symmetry q      -- x = y + x
+                 >> +commutativity  --     y + x = x + y
+                 >> p               --             x + y = y
+
+⊆transitivity : ∀ {x y z} -> x ⊆ y -> y ⊆ z -> x ⊆ z
+⊆transitivity p q = symmetry
+    (symmetry q              -- z = y + z
+  >> L (symmetry p)          --     y + z = (x + y) + z
+  >> symmetry +associativity --             (x + y) + z = x + (y + z)
+  >> R q)                    --                           x + (y + z) = x + z
+
+⊆least-element : ∀ {x} -> ε ⊆ x
+⊆least-element = +commutativity >> +identity
+
+⊆overlay : ∀ {x y} -> x ⊆ (x + y)
+⊆overlay = +associativity >> L +idempotence
+
+⊆connect : ∀ {x y} -> (x + y) ⊆ (x * y)
+⊆connect = +commutativity >> +associativity >> absorption
+
+⊆overlay-monotony : ∀ {x y z} -> x ⊆ y -> (x + z) ⊆ (y + z)
+⊆overlay-monotony {x} {y} {z} p =
+  begin
+    (x + z) + (y + z) ≡⟨ symmetry +associativity     ⟩
+    x + (z + (y + z)) ≡⟨ R +commutativity            ⟩
+    x + ((y + z) + z) ≡⟨ R (symmetry +associativity) ⟩
+    x + (y + (z + z)) ≡⟨ R (R +idempotence)          ⟩
+    x + (y + z)       ≡⟨ +associativity              ⟩
+    (x + y) + z       ≡⟨ L p                         ⟩
+    y + z
+  ∎
+
+⊆left-connect-monotony : ∀ {x y z} -> x ⊆ y -> (x * z) ⊆ (y * z)
+⊆left-connect-monotony {x} {y} {z} p =
+  begin
+    (x * z) + (y * z) ≡⟨ symmetry right-distributivity ⟩
+    (x + y) * z       ≡⟨ L p                           ⟩
+    y * z
+  ∎
+
+⊆right-connect-monotony : ∀ {x y z} -> x ⊆ y -> (z * x) ⊆ (z * y)
+⊆right-connect-monotony {x} {y} {z} p =
+  begin
+    (z * x) + (z * y) ≡⟨ symmetry left-distributivity ⟩
+    z * (x + y)       ≡⟨ R p                          ⟩
+    z * y
+  ∎
