@@ -1,11 +1,11 @@
-module Graph (A : Set) where
+module Graph where
 
 -- Core graph construction primitives
-data Graph : Set where
-    ε   : Graph                   -- Empty graph
-    [_] : A -> Graph              -- Graph comprising a single vertex
-    _+_ : Graph -> Graph -> Graph -- Overlay two graphs
-    _*_ : Graph -> Graph -> Graph -- Connect two graphs
+data Graph (A : Set) : Set where
+    ε   : Graph A                       -- Empty graph
+    v   : A -> Graph A                  -- Graph comprising a single vertex
+    _+_ : Graph A -> Graph A -> Graph A -- Overlay two graphs
+    _*_ : Graph A -> Graph A -> Graph A -- Connect two graphs
 
 infixl 4  _≡_
 infixl 8  _+_
@@ -13,47 +13,32 @@ infixl 9  _*_
 infix  10 _⊆_
 
 -- Equational theory of graphs
-data _≡_ : (x : Graph) -> (y : Graph) -> Set where
+data _≡_ {A} : (x y : Graph A) -> Set where
     -- Equivalence relation
-    reflexivity  : ∀ {x}     ->                   x ≡ x
-    symmetry     : ∀ {x y}   -> x ≡ y ->          y ≡ x
-    transitivity : ∀ {x y z} -> x ≡ y -> y ≡ z -> x ≡ z
+    reflexivity  : ∀ {x     : Graph A} ->                   x ≡ x
+    symmetry     : ∀ {x y   : Graph A} -> x ≡ y ->          y ≡ x
+    transitivity : ∀ {x y z : Graph A} -> x ≡ y -> y ≡ z -> x ≡ z
 
     -- Congruence
-    +left-congruence  : ∀ {x y z} -> x ≡ y -> x + z ≡ y + z
-    +right-congruence : ∀ {x y z} -> x ≡ y -> z + x ≡ z + y
-    *left-congruence  : ∀ {x y z} -> x ≡ y -> x * z ≡ y * z
-    *right-congruence : ∀ {x y z} -> x ≡ y -> z * x ≡ z * y
+    +left-congruence  : ∀ {x y z : Graph A} -> x ≡ y -> x + z ≡ y + z
+    +right-congruence : ∀ {x y z : Graph A} -> x ≡ y -> z + x ≡ z + y
+    *left-congruence  : ∀ {x y z : Graph A} -> x ≡ y -> x * z ≡ y * z
+    *right-congruence : ∀ {x y z : Graph A} -> x ≡ y -> z * x ≡ z * y
 
     -- Axioms of +
-    +commutativity : ∀ {x y}   -> x + y       ≡ y + x
-    +associativity : ∀ {x y z} -> x + (y + z) ≡ (x + y) + z
+    +commutativity : ∀ {x y : Graph A}   -> x + y       ≡ y + x
+    +associativity : ∀ {x y z : Graph A} -> x + (y + z) ≡ (x + y) + z
 
     -- Axioms of *
-    *left-identity  : ∀ {x}     -> ε * x       ≡ x
-    *right-identity : ∀ {x}     -> x * ε       ≡ x
-    *associativity  : ∀ {x y z} -> x * (y * z) ≡ (x * y) * z
+    *left-identity  : ∀ {x     : Graph A} -> ε * x       ≡ x
+    *right-identity : ∀ {x     : Graph A} -> x * ε       ≡ x
+    *associativity  : ∀ {x y z : Graph A} -> x * (y * z) ≡ (x * y) * z
 
     -- Other axioms
-    left-distributivity  : ∀ {x y z} -> x * (y + z) ≡ x * y + x * z
-    right-distributivity : ∀ {x y z} -> (x + y) * z ≡ x * z + y * z
-    decomposition        : ∀ {x y z} -> x * y * z   ≡ x * y + x * z + y * z
+    left-distributivity  : ∀ {x y z : Graph A} -> x * (y + z) ≡ x * y + x * z
+    right-distributivity : ∀ {x y z : Graph A} -> (x + y) * z ≡ x * z + y * z
+    decomposition        : ∀ {x y z : Graph A} -> x * y * z   ≡ x * y + x * z + y * z
 
-_⊆_ : Graph -> Graph -> Set
+-- Subgraph relation
+_⊆_ : ∀ {A} -> Graph A -> Graph A -> Set
 x ⊆ y = x + y ≡ y
-
-data BinaryOperator : Set where
-  overlay : BinaryOperator
-  connect : BinaryOperator
-
-apply : BinaryOperator -> Graph -> Graph -> Graph
-apply overlay a b = a + b
-apply connect a b = a * b
-
-L : ∀ {op : BinaryOperator} -> ∀ {x y z} -> x ≡ y -> apply op x z ≡ apply op y z
-L {overlay} {x} {y} {z} eq = +left-congruence {x} {y} {z} eq
-L {connect} {x} {y} {z} eq = *left-congruence {x} {y} {z} eq
-
-R : ∀ {op : BinaryOperator} -> ∀ {x y z} -> x ≡ y -> apply op z x ≡ apply op z y
-R {overlay} {x} {y} {z} eq = +right-congruence {x} {y} {z} eq
-R {connect} {x} {y} {z} eq = *right-congruence {x} {y} {z} eq

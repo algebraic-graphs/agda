@@ -1,10 +1,10 @@
-module Theorems (A : Set) where
+module Theorems where
 
-open import Graph A
-open import Reasoning A
+open import Graph
+open import Reasoning
 
-+pre-idempotence : ∀ {x} -> x + x + ε ≡ x
-+pre-idempotence {x} =
++pre-idempotence : ∀ {A} {x : Graph A} -> x + x + ε ≡ x
++pre-idempotence {_} {x} =
   begin
     (x + x) + ε             ≡⟨ L (L (symmetry *right-identity)) ⟩
     (x * ε + x) + ε         ≡⟨ L (R (symmetry *right-identity)) ⟩
@@ -15,8 +15,8 @@ open import Reasoning A
     x
   ∎
 
-+identity : ∀ {x} -> x + ε ≡ x
-+identity {x} =
++identity : ∀ {A} {x : Graph A} -> x + ε ≡ x
++identity {_} {x} =
   begin
     x + ε                   ≡⟨ symmetry +pre-idempotence       ⟩
     ((x + ε) + (x + ε)) + ε ≡⟨ L +associativity                ⟩
@@ -30,11 +30,11 @@ open import Reasoning A
     x
   ∎
 
-+idempotence : ∀ {x} -> x + x ≡ x
++idempotence : ∀ {A} {x : Graph A} -> x + x ≡ x
 +idempotence = transitivity (symmetry +identity) +pre-idempotence
 
-saturation : ∀ {x} -> x * x * x ≡ x * x
-saturation {x} =
+saturation : ∀ {A} {x : Graph A} -> x * x * x ≡ x * x
+saturation {_} {x} =
   begin
     (x * x) * x             ≡⟨ decomposition  ⟩
     (x * x + x * x) + x * x ≡⟨ L +idempotence ⟩
@@ -42,8 +42,8 @@ saturation {x} =
     x * x
   ∎
 
-absorption : ∀ {x y} -> x * y + x + y ≡ x * y
-absorption {x} {y} =
+absorption : ∀ {A} {x y : Graph A} -> x * y + x + y ≡ x * y
+absorption {_} {x} {y} =
   begin
     (x * y + x) + y         ≡⟨ L (R (symmetry *right-identity)) ⟩
     (x * y + x * ε) + y     ≡⟨ R (symmetry *right-identity)     ⟩
@@ -53,32 +53,32 @@ absorption {x} {y} =
   ∎
 
 -- Subgraph relation
-⊆reflexivity : ∀ {x} -> x ⊆ x
+⊆reflexivity : ∀ {A} {x : Graph A} -> x ⊆ x
 ⊆reflexivity = +idempotence
 
-⊆antisymmetry : ∀ {x y} -> x ⊆ y -> y ⊆ x -> x ≡ y
+⊆antisymmetry : ∀ {A} {x y : Graph A} -> x ⊆ y -> y ⊆ x -> x ≡ y
 ⊆antisymmetry p q = symmetry q      -- x = y + x
                  >> +commutativity  --     y + x = x + y
                  >> p               --             x + y = y
 
-⊆transitivity : ∀ {x y z} -> x ⊆ y -> y ⊆ z -> x ⊆ z
+⊆transitivity : ∀ {A} {x y z : Graph A} -> x ⊆ y -> y ⊆ z -> x ⊆ z
 ⊆transitivity p q = symmetry
     (symmetry q              -- z = y + z
   >> L (symmetry p)          --     y + z = (x + y) + z
   >> symmetry +associativity --             (x + y) + z = x + (y + z)
   >> R q)                    --                           x + (y + z) = x + z
 
-⊆least-element : ∀ {x} -> ε ⊆ x
+⊆least-element : ∀ {A} {x : Graph A} -> ε ⊆ x
 ⊆least-element = +commutativity >> +identity
 
-⊆overlay : ∀ {x y} -> x ⊆ (x + y)
+⊆overlay : ∀ {A} {x y : Graph A} -> x ⊆ (x + y)
 ⊆overlay = +associativity >> L +idempotence
 
-⊆connect : ∀ {x y} -> (x + y) ⊆ (x * y)
+⊆connect : ∀ {A} {x y : Graph A} -> (x + y) ⊆ (x * y)
 ⊆connect = +commutativity >> +associativity >> absorption
 
-⊆overlay-monotony : ∀ {x y z} -> x ⊆ y -> (x + z) ⊆ (y + z)
-⊆overlay-monotony {x} {y} {z} p =
+⊆overlay-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (x + z) ⊆ (y + z)
+⊆overlay-monotony {_} {x} {y} {z} p =
   begin
     (x + z) + (y + z) ≡⟨ symmetry +associativity     ⟩
     x + (z + (y + z)) ≡⟨ R +commutativity            ⟩
@@ -89,16 +89,16 @@ absorption {x} {y} =
     y + z
   ∎
 
-⊆left-connect-monotony : ∀ {x y z} -> x ⊆ y -> (x * z) ⊆ (y * z)
-⊆left-connect-monotony {x} {y} {z} p =
+⊆left-connect-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (x * z) ⊆ (y * z)
+⊆left-connect-monotony {_} {x} {y} {z} p =
   begin
     (x * z) + (y * z) ≡⟨ symmetry right-distributivity ⟩
     (x + y) * z       ≡⟨ L p                           ⟩
     y * z
   ∎
 
-⊆right-connect-monotony : ∀ {x y z} -> x ⊆ y -> (z * x) ⊆ (z * y)
-⊆right-connect-monotony {x} {y} {z} p =
+⊆right-connect-monotony : ∀ {A} {x y z : Graph A} -> x ⊆ y -> (z * x) ⊆ (z * y)
+⊆right-connect-monotony {_} {x} {y} {z} p =
   begin
     (z * x) + (z * y) ≡⟨ symmetry left-distributivity ⟩
     z * (x + y)       ≡⟨ R p                          ⟩
