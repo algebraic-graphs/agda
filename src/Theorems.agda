@@ -33,6 +33,15 @@ open import Reasoning A
 +idempotence : ∀ {x} -> x + x ≡ x
 +idempotence = transitivity (symmetry +identity) +pre-idempotence
 
+saturation : ∀ {x} -> x * x * x ≡ x * x
+saturation {x} =
+  begin
+    (x * x) * x             ≡⟨ decomposition  ⟩
+    (x * x + x * x) + x * x ≡⟨ L +idempotence ⟩
+    x * x + x * x           ≡⟨ +idempotence   ⟩
+    x * x
+  ∎
+
 absorption : ∀ {x y} -> x * y + x + y ≡ x * y
 absorption {x} {y} =
   begin
