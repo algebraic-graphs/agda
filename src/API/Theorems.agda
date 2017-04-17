@@ -10,6 +10,10 @@ open import Reasoning
 vertices-vertex : ∀ {A} {x : A} -> vertices [ x ] ≡ vertex x
 vertices-vertex = +identity >> reflexivity
 
+-- edge x y == clique [x, y]
+edge-clique : ∀ {A} {x y : A} -> edge x y ≡ clique (x :: [ y ])
+edge-clique = symmetry (R *right-identity)
+
 -- vertices xs ⊆ clique xs
 vertices-clique : ∀ {A} {xs : List A} -> vertices xs ⊆ clique xs
 vertices-clique {_} {[]}     = ⊆reflexivity
