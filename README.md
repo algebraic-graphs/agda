@@ -1,6 +1,6 @@
 # The theory of algebraic graphs
 
-[![Build Status](https://travis-ci.org/snowleopard/alga-theory.svg?branch=master)](https://travis-ci.org/snowleopard/alga-theory)
+[![Build Status](https://travis-ci.org/algebraic-graphs/agda.svg?branch=master)](https://travis-ci.org/algebraic-graphs/agda)
 
 We use Agda to formalise the theory of [algebraic graphs](https://github.com/snowleopard/alga-paper)
 and prove a few key theorems.
