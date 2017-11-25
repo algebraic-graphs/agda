@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/snowleopard/alga-theory.svg?branch=master)](https://travis-ci.org/snowleopard/alga-theory)
 
-We use Agda to formalise the theory of [algebraic graphs](https://github.com/snowleopard/alga)
+We use Agda to formalise the theory of [algebraic graphs](https://github.com/snowleopard/alga-paper)
 and prove a few key theorems.
 
 ## Code overview
