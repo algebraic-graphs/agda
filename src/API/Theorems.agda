@@ -1,10 +1,10 @@
 module API.Theorems where
 
-open import Algebra
-open import Algebra.Theorems
+open import Algebra.Graph
+open import Algebra.Graph.Theorems
+open import Algebra.Graph.Reasoning
 open import API
 open import Prelude
-open import Reasoning
 
 -- vertices [x] == vertex x
 vertices-vertex : ∀ {A} {x : A} -> vertices [ x ] ≡ vertex x

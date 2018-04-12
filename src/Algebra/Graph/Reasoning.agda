@@ -1,6 +1,6 @@
-module Reasoning where
+module Algebra.Graph.Reasoning where
 
-open import Algebra
+open import Algebra.Graph
 
 -- Standard syntax sugar for writing equational proofs
 infix 4 _≈_
