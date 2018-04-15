@@ -24,8 +24,8 @@ infixl 8 _>>_
 _>>_ : ∀ {A} {x y z : LabelledGraph A} -> x ≡ y -> y ≡ z -> x ≡ z
 _>>_ = transitivity
 
-L : ∀ {A} {x y z : LabelledGraph A} {r : Dioid} -> x ≡ y -> x -[ r ]> z ≡ y -[ r ]> z
+L : ∀ {A} {x y z : LabelledGraph A} {r : Dioid} -> x ≡ y -> x [ r ]> z ≡ y [ r ]> z
 L = left-congruence
 
-R : ∀ {A} {x y z : LabelledGraph A} {r : Dioid} -> x ≡ y -> z -[ r ]> x ≡ z -[ r ]> y
+R : ∀ {A} {x y z : LabelledGraph A} {r : Dioid} -> x ≡ y -> z [ r ]> x ≡ z [ r ]> y
 R = right-congruence
