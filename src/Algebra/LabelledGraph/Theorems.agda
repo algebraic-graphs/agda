@@ -35,51 +35,55 @@ idempotence {_} {a} =
     a + a
   ∎
 
+left-absorption : ∀ {A} {a b : LabelledGraph A} {r : Dioid} -> a -[ r ]> b ≡ a -[ r ]> b + a
+left-absorption {_} {a} {b} {r} =
+  begin
+    (a -[ r ]> b)                 ≡⟨ absorption ⟩
+    (a -[ r ]> b) + a + b         ≡⟨ L (R idempotence) ⟩
+    (a -[ r ]> b) + (a + a) + b   ≡⟨ associativity ⟩
+    (a -[ r ]> b) + (a + a + b)   ≡⟨ R zero-commutativity ⟩
+    (a -[ r ]> b) + (b + (a + a)) ≡⟨ R (symmetry associativity) ⟩
+    (a -[ r ]> b) + ((b + a) + a) ≡⟨ R (L zero-commutativity) ⟩
+    (a -[ r ]> b) + ((a + b) + a) ≡⟨ symmetry associativity ⟩
+    (a -[ r ]> b) + (a + b) + a   ≡⟨ L (symmetry associativity) ⟩
+    (a -[ r ]> b) + a + b + a     ≡⟨ L (symmetry absorption) ⟩
+    (a -[ r ]> b) + a
+  ∎
+
+right-absorption : ∀ {A} {a b : LabelledGraph A} {r : Dioid} -> a -[ r ]> b ≡ a -[ r ]> b + b
+right-absorption {_} {a} {b} {r} =
+  begin
+    (a -[ r ]> b)               ≡⟨ absorption ⟩
+    (a -[ r ]> b) + a + b       ≡⟨ R idempotence ⟩
+    (a -[ r ]> b) + a + (b + b) ≡⟨ symmetry associativity ⟩
+    (a -[ r ]> b) + a + b + b   ≡⟨ L (symmetry absorption) ⟩
+    (a -[ r ]> b) + b
+  ∎
+
 right-distributivity : ∀ {A} {a b c : LabelledGraph A} {r : Dioid} -> (a + b) -[ r ]> c ≡ a -[ r ]> c + b -[ r ]> c
 right-distributivity {_} {a} {b} {c} {r} =
   begin
-    (a + b) -[ r ]> c ≡⟨ right-decomposition ⟩
-    ((a + b) + (a -[ r ]> c)) + (b -[ r ]> c) ≡⟨ L (R absorption) ⟩
-    (a + b) + ((a -[ r ]> c) + a + c) + (b -[ r ]> c) ≡⟨ R absorption ⟩
-    (a + b) + ((a -[ r ]> c) + a + c) + ((b -[ r ]> c) + b + c) ≡⟨ L (associativity)⟩
-    a + (b + ((a -[ r ]> c) + a + c)) + ((b -[ r ]> c) + b + c) ≡⟨ L (R zero-commutativity)⟩
-    a + (((a -[ r ]> c) + a + c) + b) + ((b -[ r ]> c) + b + c) ≡⟨ associativity ⟩
-    a + ((((a -[ r ]> c) + a + c) + b) + ((b -[ r ]> c) + b + c)) ≡⟨ R (associativity) ⟩
-    a + (((a -[ r ]> c) + a + c) + (b + ((b -[ r ]> c) + b + c))) ≡⟨ R (R zero-commutativity)⟩
-    a + (((a -[ r ]> c) + a + c) + (((b -[ r ]> c) + b + c) + b)) ≡⟨ R (R associativity) ⟩
-    a + (((a -[ r ]> c) + a + c) + ((b -[ r ]> c) + b + (c + b))) ≡⟨ R (R (R zero-commutativity)) ⟩
-    a + (((a -[ r ]> c) + a + c) + ((b -[ r ]> c) + b + (b + c))) ≡⟨ R (R (symmetry associativity)) ⟩
-    a + (((a -[ r ]> c) + a + c) + ((b -[ r ]> c) + b + b + c)) ≡⟨ R (R (L associativity)) ⟩
-    a + (((a -[ r ]> c) + a + c) + ((b -[ r ]> c) + (b + b) + c)) ≡⟨ R (R (L (R (symmetry idempotence))))⟩
-    a + (((a -[ r ]> c) + a + c) + ((b -[ r ]> c) + b + c)) ≡⟨ R (R (symmetry absorption)) ⟩
-    a + (((a -[ r ]> c) + a + c) + (b -[ r ]> c)) ≡⟨ symmetry associativity ⟩
-    a + ((a -[ r ]> c) + a + c) + (b -[ r ]> c) ≡⟨ L zero-commutativity ⟩
-    ((a -[ r ]> c) + a + c) + a + (b -[ r ]> c) ≡⟨ L associativity ⟩
-    ((a -[ r ]> c) + a + (c + a)) + (b -[ r ]> c) ≡⟨ L (R zero-commutativity)⟩
-    ((a -[ r ]> c) + a + (a + c)) + (b -[ r ]> c) ≡⟨ L (symmetry associativity)⟩
-    ((a -[ r ]> c) + a + a + c) + (b -[ r ]> c) ≡⟨ L (L associativity)⟩
-    ((a -[ r ]> c) + (a + a) + c) + (b -[ r ]> c) ≡⟨ L (L (R (symmetry idempotence))) ⟩
-    ((a -[ r ]> c) + a + c) + (b -[ r ]> c) ≡⟨ L (symmetry absorption) ⟩
+    (a + b) -[ r ]> c                       ≡⟨ right-decomposition ⟩
+    a + b + (a -[ r ]> c) + (b -[ r ]> c)   ≡⟨ L zero-commutativity ⟩
+    (a -[ r ]> c) + (a + b) + (b -[ r ]> c) ≡⟨ L (symmetry associativity) ⟩
+    ((a -[ r ]> c) + a) + b + (b -[ r ]> c) ≡⟨ L (L (symmetry left-absorption)) ⟩
+    (a -[ r ]> c) + b + (b -[ r ]> c)       ≡⟨ associativity ⟩
+    (a -[ r ]> c) + (b + (b -[ r ]> c))     ≡⟨ R zero-commutativity ⟩
+    (a -[ r ]> c) + ((b -[ r ]> c) + b)     ≡⟨ R (symmetry left-absorption) ⟩
     (a -[ r ]> c) + (b -[ r ]> c)
   ∎
 
 left-distributivity : ∀ {A} {a b c : LabelledGraph A} {r : Dioid} -> a -[ r ]> (b + c) ≡ a -[ r ]> b + a -[ r ]> c
 left-distributivity {_} {a} {b} {c} {r} =
   begin
-    a -[ r ]> (b + c) ≡⟨ left-decomposition ⟩
+    a -[ r ]> (b + c)                   ≡⟨ left-decomposition ⟩
     a -[ r ]> b + a -[ r ]> c + (b + c) ≡⟨ symmetry associativity ⟩
-    a -[ r ]> b + a -[ r ]> c + b + c ≡⟨ L associativity ⟩
+    a -[ r ]> b + a -[ r ]> c + b + c   ≡⟨ L associativity ⟩
     a -[ r ]> b + (a -[ r ]> c + b) + c ≡⟨ L (R zero-commutativity) ⟩
     a -[ r ]> b + (b + a -[ r ]> c) + c ≡⟨ L (symmetry associativity) ⟩
-    a -[ r ]> b + b + a -[ r ]> c + c ≡⟨ L (L (L absorption)) ⟩
-    (a -[ r ]> b + a + b) + b + a -[ r ]> c + c ≡⟨ L (L associativity) ⟩
-    a -[ r ]> b + a + (b + b) + a -[ r ]> c + c ≡⟨ L (L (R (symmetry idempotence))) ⟩
-    a -[ r ]> b + a + b + a -[ r ]> c + c ≡⟨ L (L (symmetry absorption)) ⟩
-    a -[ r ]> b + a -[ r ]> c + c ≡⟨ L (R absorption) ⟩
-    a -[ r ]> b + (a -[ r ]> c + a + c) + c ≡⟨ associativity ⟩
-    a -[ r ]> b + (a -[ r ]> c + a + c + c) ≡⟨ (R associativity) ⟩
-    a -[ r ]> b + (a -[ r ]> c + a + (c + c)) ≡⟨ R (R (symmetry idempotence)) ⟩
-    a -[ r ]> b + (a -[ r ]> c + a + c) ≡⟨ R (symmetry absorption) ⟩
+    a -[ r ]> b + b + a -[ r ]> c + c   ≡⟨ L (L (symmetry right-absorption)) ⟩
+    a -[ r ]> b + a -[ r ]> c + c       ≡⟨ associativity ⟩
+    a -[ r ]> b + (a -[ r ]> c + c)     ≡⟨ R (symmetry right-absorption) ⟩
     a -[ r ]> b + a -[ r ]> c
   ∎
 
