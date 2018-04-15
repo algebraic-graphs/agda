@@ -92,7 +92,7 @@ left-distributivity {_} {a} {b} {c} {r} =
 to-graph : ∀ {A} -> LabelledGraph A -> Graph A
 to-graph ε = Graph.ε
 to-graph (v x) = Graph.v x
-to-graph (x -[ r ]> y) with Bool.boolDioid r
+to-graph (x -[ r ]> y) with Bool.bool-dioid r
 ... | Bool.false = to-graph x Graph.+ to-graph y
 ... | Bool.true  = to-graph x Graph.* to-graph y
 

@@ -26,16 +26,16 @@ data _≡_ : (x y : ShortestDistance) -> Set where
   symmetry     : ∀ {x y   : ShortestDistance} -> x ≡ y ->          y ≡ x
   transitivity : ∀ {x y z : ShortestDistance} -> x ≡ y -> y ≡ z -> x ≡ z
 
-shortestDistanceDioid : Dioid -> ShortestDistance
-shortestDistanceDioid zero = Unreachable
-shortestDistanceDioid one  = Distance Nat.zero
-shortestDistanceDioid (r + s) with shortestDistanceDioid r
-... | Unreachable = shortestDistanceDioid s
-... | Distance n with shortestDistanceDioid s
+shortest-distance-dioid : Dioid -> ShortestDistance
+shortest-distance-dioid zero = Unreachable
+shortest-distance-dioid one  = Distance Nat.zero
+shortest-distance-dioid (r + s) with shortest-distance-dioid r
+... | Unreachable = shortest-distance-dioid s
+... | Distance n with shortest-distance-dioid s
 ... | Unreachable = Distance n
 ... | Distance m = Distance (Nat.min n m)
-shortestDistanceDioid (r * s) with shortestDistanceDioid r
+shortest-distance-dioid (r * s) with shortest-distance-dioid r
 ... | Unreachable = Unreachable
-... | Distance n with shortestDistanceDioid s
+... | Distance n with shortest-distance-dioid s
 ... | Unreachable = Unreachable
 ... | Distance m = Distance (n Nat.+ m)

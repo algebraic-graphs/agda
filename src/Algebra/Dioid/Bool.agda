@@ -19,8 +19,8 @@ _and_ : Bool -> Bool -> Bool
 true and true = true
 _ and _ = false
 
-boolDioid : Dioid -> Bool
-boolDioid zero = false
-boolDioid one  = true
-boolDioid (r + s) = boolDioid r or  boolDioid s
-boolDioid (r * s) = boolDioid r and boolDioid s
+bool-dioid : Dioid -> Bool
+bool-dioid zero = false
+bool-dioid one  = true
+bool-dioid (r + s) = bool-dioid r or  bool-dioid s
+bool-dioid (r * s) = bool-dioid r and bool-dioid s
