@@ -4,3 +4,4 @@ for i in $( find src -name "*.agda" | sed 's/src\/\(.*\)\.agda/\1/' | sed 's/\//
     echo "import $i" >> index.agda;
 done;
 agda -i . -i src/ index.agda
+rm -rf index.agda;
