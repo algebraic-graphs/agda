@@ -9,4 +9,4 @@ before_install:
 - docker pull scottfleischman/agda:2.5.2
 
 script:
-- docker run -v $TRAVIS_BUILD_DIR:/opt/agda-build scottfleischman/agda:2.5.2 /bin/sh -c 'cd /opt/agda-build; ./index.sh; agda -i . -i src/ index.agda'
+- docker run -v $TRAVIS_BUILD_DIR:/opt/agda-build scottfleischman/agda:2.5.2 /bin/sh -c 'cd /opt/agda-build; ./verify.sh'
