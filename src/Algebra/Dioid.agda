@@ -1,6 +1,5 @@
 module Algebra.Dioid where
 
-open import Algebra.Reasoning
 
 record Dioid A (_≡_ : A -> A -> Set) : Set where
   field
