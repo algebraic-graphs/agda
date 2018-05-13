@@ -157,52 +157,19 @@ graph-laws {x = .(_ Graph.* (_ Graph.+ _))} {.(_ Graph.* _ Graph.+ _ Graph.* _)}
 graph-laws {x = .((_ Graph.+ _) Graph.* _)} {.(_ Graph.* _ Graph.+ _ Graph.* _)} Graph.right-distributivity = right-distributivity
 graph-laws {x = .(_ Graph.* _ Graph.* _)} {.(_ Graph.* _ Graph.+ _ Graph.* _ Graph.+ _ Graph.* _)} Graph.decomposition = right-decomposition
 
-to-from-identity : ∀ {A} {x y : Graph A} -> x Graph.≡ y -> (to-graph (from-graph x)) Graph.≡ (to-graph (from-graph y))
-to-from-identity Graph.reflexivity = Graph.reflexivity
-to-from-identity (Graph.symmetry eq) = Graph.symmetry (to-from-identity eq)
-to-from-identity (Graph.transitivity eq eq₁) = Graph.transitivity (to-from-identity eq) (to-from-identity eq₁)
-to-from-identity (Graph.+left-congruence eq) = Graph.+left-congruence (to-from-identity eq)
-to-from-identity (Graph.+right-congruence eq) = Graph.+right-congruence (to-from-identity eq)
-to-from-identity (Graph.*left-congruence eq) = Graph.*left-congruence (to-from-identity eq)
-to-from-identity (Graph.*right-congruence eq) = Graph.*right-congruence (to-from-identity eq)
-to-from-identity Graph.+commutativity = Graph.+commutativity
-to-from-identity Graph.+associativity = Graph.+associativity
-to-from-identity Graph.*left-identity = Graph.*left-identity
-to-from-identity Graph.*right-identity = Graph.*right-identity
-to-from-identity Graph.*associativity = Graph.*associativity
-to-from-identity Graph.left-distributivity = Graph.left-distributivity
-to-from-identity Graph.right-distributivity = Graph.right-distributivity
-to-from-identity Graph.decomposition = Graph.decomposition
+to-from-identity : ∀ {A} {x : Graph A} -> (to-graph (from-graph x)) Graph.≡ x
+to-from-identity {x = Graph.ε} = Graph.reflexivity
+to-from-identity {x = Graph.v x} = Graph.reflexivity
+to-from-identity {x = x₁ Graph.+ x₂} = Graph.symmetry (Graph.+left-congruence  (Graph.symmetry (to-from-identity {x = x₁})))
+                              Graph.>> Graph.symmetry (Graph.+right-congruence (Graph.symmetry (to-from-identity {x = x₂})))
+to-from-identity {x = x₁ Graph.* x₂} = Graph.symmetry (Graph.*left-congruence  (Graph.symmetry (to-from-identity {x = x₁})))
+                              Graph.>> Graph.symmetry (Graph.*right-congruence (Graph.symmetry (to-from-identity {x = x₂})))
 
-from-to-identity : ∀ {A} {x y : LabelledGraph Bool.bool-dioid A} -> x ≡ y -> _≡_ {A} {Bool.Bool} {Bool._≡_} {Bool.bool-dioid} (from-graph (to-graph x)) (from-graph (to-graph y))
-from-to-identity reflexivity = reflexivity
-from-to-identity (symmetry eq) = symmetry (from-to-identity eq)
-from-to-identity (transitivity eq eq₁) = transitivity (from-to-identity eq) (from-to-identity eq₁)
-from-to-identity (left-congruence {r = r} eq) with r
-... | Bool.true = left-congruence (from-to-identity eq)
-... | Bool.false = left-congruence (from-to-identity eq)
-from-to-identity (right-congruence {r = r} eq) with r
-... | Bool.true = right-congruence (from-to-identity eq)
-... | Bool.false = right-congruence (from-to-identity eq)
-from-to-identity zero-commutativity = zero-commutativity
-from-to-identity (left-identity {r = r}) with r
-... | Bool.true = left-identity
-... | Bool.false = left-identity
-from-to-identity (right-identity {r = r}) with r
-... | Bool.true = right-identity
-... | Bool.false = right-identity
-from-to-identity (left-decomposition {r = r} {s}) with r | s
-... | Bool.true  | Bool.true  = left-decomposition
-... | Bool.true  | Bool.false = left-decomposition
-... | Bool.false | Bool.true  = left-decomposition
-... | Bool.false | Bool.false = left-decomposition
-from-to-identity (right-decomposition {r = r} {s}) with r | s
-... | Bool.true  | Bool.true  = right-decomposition
-... | Bool.true  | Bool.false = right-decomposition
-... | Bool.false | Bool.true  = right-decomposition
-... | Bool.false | Bool.false = right-decomposition
-from-to-identity (label-addition {r = r} {s}) with r | s
-... | Bool.true  | Bool.true  = label-addition
-... | Bool.true  | Bool.false = label-addition
-... | Bool.false | Bool.true  = label-addition
-... | Bool.false | Bool.false = label-addition
+from-to-identity : ∀ {A} {x : LabelledGraph Bool.bool-dioid A} -> (from-graph (to-graph x)) ≡ x
+from-to-identity {x = ε} = reflexivity
+from-to-identity {x = v x} = reflexivity
+from-to-identity {x = x₁ [ d ]> x₂} with d
+... | Bool.true  = symmetry (left-congruence  (symmetry (from-to-identity {x = x₁})))
+                >> symmetry (right-congruence (symmetry (from-to-identity {x = x₂})))
+... | Bool.false = symmetry (left-congruence  (symmetry (from-to-identity {x = x₁})))
+                >> symmetry (right-congruence (symmetry (from-to-identity {x = x₂})))
