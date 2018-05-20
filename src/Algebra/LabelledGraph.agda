@@ -29,8 +29,9 @@ data _≡_ {A D eq} {d : Dioid D eq} : (x y : LabelledGraph d A) -> Set where
     transitivity : ∀ {x y z : LabelledGraph d A} -> x ≡ y -> y ≡ z -> x ≡ z
 
     -- Congruence
-    left-congruence  : ∀ {x y z : LabelledGraph d A} {r : D} -> x ≡ y -> x [ r ]> z ≡ y [ r ]> z
-    right-congruence : ∀ {x y z : LabelledGraph d A} {r : D} -> x ≡ y -> z [ r ]> x ≡ z [ r ]> y
+    left-congruence  : ∀ {x y z : LabelledGraph d A} {r : D} -> x ≡ y  -> x [ r ]> z ≡ y [ r ]> z
+    right-congruence : ∀ {x y z : LabelledGraph d A} {r : D} -> x ≡ y  -> z [ r ]> x ≡ z [ r ]> y
+    dioid-congruence : ∀ {x y : LabelledGraph d A} {r s : D} -> eq r s -> x [ r ]> y ≡ x [ s ]> y
 
     -- Axioms
     zero-commutativity  : ∀ {x y : LabelledGraph d A} -> x + y ≡ y + x

@@ -100,6 +100,7 @@ to-graph (v x) = Graph.v x
 to-graph (x [ Bool.false ]> y) = to-graph x Graph.+ to-graph y
 to-graph (x [ Bool.true  ]> y) = to-graph x Graph.* to-graph y
 
+
 labelled-graph-laws : ∀ {A} {x y : LabelledGraph Bool.bool-dioid A} -> x ≡ y -> (to-graph x) Graph.≡ (to-graph y)
 labelled-graph-laws reflexivity = Graph.reflexivity
 labelled-graph-laws (symmetry eq) = Graph.symmetry (labelled-graph-laws eq)
@@ -111,6 +112,13 @@ labelled-graph-laws (left-congruence {r = r} eq) with r
 labelled-graph-laws (right-congruence {r = r} eq) with r
 ... | Bool.true = Graph.*right-congruence (labelled-graph-laws eq)
 ... | Bool.false = Graph.+right-congruence (labelled-graph-laws eq)
+labelled-graph-laws (dioid-congruence eq) = dioid-recur eq
+  where
+    dioid-recur : ∀ {A} {x y : LabelledGraph Bool.bool-dioid A} {r s : Bool.Bool}
+               -> r Bool.≡ s -> (to-graph (x [ r ]> y)) Graph.≡ (to-graph (x [ s ]> y))
+    dioid-recur Bool.reflexivity = Graph.reflexivity
+    dioid-recur (Bool.symmetry eq) = Graph.symmetry (dioid-recur eq)
+    dioid-recur (Bool.transitivity eq eq₁) = Graph.transitivity (dioid-recur eq) (dioid-recur eq₁)
 labelled-graph-laws zero-commutativity = Graph.+commutativity
 labelled-graph-laws (left-identity {r = r}) with r
 ... | Bool.true = Graph.*left-identity
