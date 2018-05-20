@@ -124,3 +124,99 @@ absorption {_} {x} {y} =
 ⊆right-monotony : ∀ {A} {op : BinaryOperator} {x y z : Graph A} -> x ⊆ y -> apply op z x ⊆ apply op z y
 ⊆right-monotony {_} {+op} {x} {y} {z} p = ⊆right-overlay-monotony p
 ⊆right-monotony {_} {*op} {x} {y} {z} p = ⊆right-connect-monotony p
+
+
+-- | Helper theorems
+
+flip-end : ∀ {A} {x y z : Graph A} -> (x + y + z) ≡ (x + z + y)
+flip-end = symmetry +associativity >> R +commutativity >> +associativity
+
+*+ltriple : ∀ {A} {x y z : Graph A} -> (x * (y + z)) ≡ (x * y) + (x * z) + (y + z)
+*+ltriple {_} {x} {y} {z} =
+  begin
+    (x * (y + z)) ≡⟨ left-distributivity ⟩
+    (x * y + x * z) ≡⟨ L (symmetry absorption) ⟩
+    (x * y + x + y + x * z) ≡⟨ R (symmetry absorption) ⟩
+    ((x * y + x + y) + (x * z + x + z)) ≡⟨ symmetry +associativity ⟩
+    ((x * y + x) + (y + (x * z + x + z))) ≡⟨ R +commutativity ⟩
+    ((x * y + x) + ((x * z + x + z) + y)) ≡⟨ symmetry +associativity ⟩
+    (x * y + (x + (x * z + x + z + y))) ≡⟨ R +commutativity ⟩
+    (x * y + (x * z + x + z + y + x)) ≡⟨ R flip-end ⟩
+    (x * y + (x * z + x + z + x + y)) ≡⟨ R (L flip-end) ⟩
+    (x * y + (x * z + x + x + z + y)) ≡⟨ R (L (L (symmetry +associativity >> R +idempotence))) ⟩
+    (x * y + (x * z + x + z + y)) ≡⟨ R (L (L (L (symmetry absorption)))) ⟩
+    (x * y + (x * z + x + z + x + z + y)) ≡⟨ R (L (L flip-end)) ⟩
+    (x * y + (x * z + x + x + z + z + y)) ≡⟨ R (L (L (L (symmetry +associativity >> R +idempotence)))) ⟩
+    (x * y + (x * z + x + z + z + y)) ≡⟨ R (L (L absorption)) ⟩
+    (x * y + (x * z + z + y)) ≡⟨ R (symmetry +associativity) ⟩
+    (x * y + (x * z + (z + y))) ≡⟨ +associativity ⟩
+    (x * y + (x * z) + (z + y)) ≡⟨ +right-congruence +commutativity ⟩
+    (x * y) + (x * z) + (y + z)
+  ∎
+
++*ltriple : ∀ {A} {x y z : Graph A} -> (x + (y * z)) ≡ (x + y) + (x + z) + (y * z)
++*ltriple {_} {x} {y} {z} =
+  begin
+    (x + (y * z)) ≡⟨ R (symmetry absorption) ⟩
+    (x + (y * z + y + z)) ≡⟨ R (symmetry +associativity >> +commutativity) ⟩
+    (x + (y + z + y * z)) ≡⟨ L (symmetry +idempotence) ⟩
+    (x + x + (y + z + y * z)) ≡⟨ +associativity ⟩
+    (x + x + (y + z) + y * z) ≡⟨ L (+associativity) ⟩
+    (x + x + y + z + y * z) ≡⟨ L (L flip-end) ⟩
+    (x + y + x + z + y * z) ≡⟨ L (symmetry +associativity) ⟩
+    (x + y + (x + z) + (y * z))
+  ∎
+
+++ltriple : ∀ {A} {x y z : Graph A} -> (x + (y + z)) ≡ (x + y) + (x + z) + (y + z)
+++ltriple {_} {x} {y} {z} =
+  begin
+    (x + (y + z)) ≡⟨ +associativity ⟩
+    (x + y + z) ≡⟨ L (symmetry +idempotence) ⟩
+    (x + y + (x + y) + z) ≡⟨ symmetry +associativity ⟩
+    (x + y + (x + y + z)) ≡⟨ R flip-end ⟩
+    (x + y + (x + z + y)) ≡⟨ R (L (R (symmetry +idempotence))) ⟩
+    (x + y + (x + (z + z) + y)) ≡⟨ R (L (+associativity)) ⟩
+    (x + y + (x + z + z + y)) ≡⟨ R (symmetry +associativity) ⟩
+    (x + y + ((x + z) + (z + y))) ≡⟨ +associativity ⟩
+    (x + y + (x + z) + (z + y)) ≡⟨ R (+commutativity) ⟩
+    (x + y + (x + z) + (y + z))
+  ∎
+
+*+rtriple : ∀ {A} {x y z : Graph A} -> ((x * y) + z) ≡ (x * y) + (x + z) + (y + z)
+*+rtriple {_} {x} {y} {z} =
+  begin
+    (x * y + z) ≡⟨ L (symmetry absorption) ⟩
+    (x * y + x + y + z) ≡⟨ R (symmetry +idempotence) ⟩
+    (x * y + x + y + (z + z)) ≡⟨ +associativity ⟩
+    (x * y + x + y + z + z) ≡⟨ L flip-end ⟩
+    (x * y + x + z + y + z) ≡⟨ symmetry +associativity ⟩
+    (x * y + x + z + (y + z)) ≡⟨ L (symmetry +associativity) ⟩
+    (x * y + (x + z) + (y + z))
+  ∎
+
++*rtriple : ∀ {A} {x y z : Graph A} -> ((x + y) * z) ≡ (x + y) + (x * z) + (y * z)
++*rtriple {_} {x} {y} {z} =
+  begin
+    ((x + y) * z) ≡⟨ right-distributivity ⟩
+    (x * z + y * z) ≡⟨ L (symmetry absorption) ⟩
+    (x * z + x + z + y * z) ≡⟨ R (symmetry absorption) ⟩
+    (x * z + x + z + (y * z + y + z)) ≡⟨ symmetry (R +associativity) ⟩
+    (x * z + x + z + (y * z + (y + z))) ≡⟨ R +commutativity ⟩
+    (x * z + x + z + (y + z + y * z)) ≡⟨ +associativity ⟩
+    (x * z + x + z + (y + z) + y * z) ≡⟨ L +associativity ⟩
+    (x * z + x + z + y + z + y * z) ≡⟨ L flip-end ⟩
+    (x * z + x + z + z + y + y * z) ≡⟨ L (L (symmetry +associativity)) ⟩
+    (x * z + x + (z + z) + y + y * z) ≡⟨ L (L (R +idempotence)) ⟩
+    (x * z + x + z + y + y * z) ≡⟨ L (L (L (R (symmetry +idempotence)))) ⟩
+    (x * z + (x + x) + z + y + y * z) ≡⟨ L (L (L +associativity)) ⟩
+    (x * z + x + x + z + y + y * z) ≡⟨ L (L (symmetry +associativity)) ⟩
+    (x * z + x + (x + z) + y + y * z) ≡⟨ L (L (R +commutativity)) ⟩
+    (x * z + x + (z + x) + y + y * z) ≡⟨ L (L +associativity)⟩
+    (x * z + x + z + x + y + y * z) ≡⟨ L (L (L absorption)) ⟩
+    (x * z + x + y + y * z) ≡⟨ symmetry (L +associativity) ⟩
+    (x * z + (x + y) + y * z) ≡⟨ L +commutativity ⟩
+    (x + y + (x * z) + (y * z))
+  ∎
+
+++rtriple : ∀ {A} {x y z : Graph A} -> ((x + y) + z) ≡ (x + y) + (x + z) + (y + z)
+++rtriple {_} {x} {y} {z} = symmetry +associativity >> ++ltriple

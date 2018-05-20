@@ -1,6 +1,6 @@
 module Algebra.Dioid.Bool where
 
-open import Algebra.Dioid using (Dioid; zero; one; _+_; _*_)
+open import Algebra.Dioid
 
 data Bool : Set where
   true  : Bool
@@ -18,9 +18,3 @@ _ or _ = true
 _and_ : Bool -> Bool -> Bool
 true and true = true
 _ and _ = false
-
-bool-dioid : Dioid -> Bool
-bool-dioid zero = false
-bool-dioid one  = true
-bool-dioid (r + s) = bool-dioid r or  bool-dioid s
-bool-dioid (r * s) = bool-dioid r and bool-dioid s

@@ -1,7 +1,6 @@
 module Algebra.Dioid.Bool.Theorems where
 
-open import Algebra.Dioid using (Dioid; zero; one; _+_; _*_)
-import Algebra.Dioid
+open import Algebra.Dioid
 open import Algebra.Dioid.Bool
 
 or-left-congruence : ∀ {b c d : Bool} -> b ≡ c -> (b or d) ≡ (c or d)
@@ -80,22 +79,32 @@ right-distributivity {false} {true} {true} = reflexivity
 right-distributivity {false} {true} {false} = reflexivity
 right-distributivity {false} {false} {d} = reflexivity
 
-bool-dioid-lawful : ∀ {r s : Dioid} -> r Algebra.Dioid.≡ s -> bool-dioid r ≡ bool-dioid s
-bool-dioid-lawful {r} {.r} Algebra.Dioid.reflexivity = reflexivity
-bool-dioid-lawful {r} {s} (Algebra.Dioid.symmetry eq) = symmetry (bool-dioid-lawful eq)
-bool-dioid-lawful {r} {s} (Algebra.Dioid.transitivity eq eq₁) = transitivity (bool-dioid-lawful eq) (bool-dioid-lawful eq₁)
-bool-dioid-lawful {.(_ + _)} {.(_ + _)} (Algebra.Dioid.+left-congruence eq) = or-left-congruence (bool-dioid-lawful eq)
-bool-dioid-lawful {.(_ + _)} {.(_ + _)} (Algebra.Dioid.+right-congruence eq) = or-right-congruence (bool-dioid-lawful eq)
-bool-dioid-lawful {.(_ * _)} {.(_ * _)} (Algebra.Dioid.*left-congruence eq) = and-left-congruence (bool-dioid-lawful eq)
-bool-dioid-lawful {.(_ * _)} {.(_ * _)} (Algebra.Dioid.*right-congruence eq) = and-right-congruence (bool-dioid-lawful eq)
-bool-dioid-lawful {.(s + s)} {s} Algebra.Dioid.+idempotence = or-idempotence
-bool-dioid-lawful {.(_ + _)} {.(_ + _)} Algebra.Dioid.+commutativity = or-commutativity
-bool-dioid-lawful {.(_ + (_ + _))} {.(_ + _ + _)} Algebra.Dioid.+associativity = or-associativity
-bool-dioid-lawful {.(s + zero)} {s} Algebra.Dioid.+zero-identity = or-false-identity
-bool-dioid-lawful {.(_ * (_ * _))} {.(_ * _ * _)} Algebra.Dioid.*associativity = and-associativity
-bool-dioid-lawful {.(zero * _)} {.zero} Algebra.Dioid.*left-zero = reflexivity
-bool-dioid-lawful {.(_ * zero)} {.zero} Algebra.Dioid.*right-zero = and-right-false
-bool-dioid-lawful {.(one * s)} {s} Algebra.Dioid.*left-identity = and-left-true
-bool-dioid-lawful {.(s * one)} {s} Algebra.Dioid.*right-identity = and-right-true
-bool-dioid-lawful {.(_ * (_ + _))} {.(_ * _ + _ * _)} Algebra.Dioid.left-distributivity = left-distributivity
-bool-dioid-lawful {.((_ + _) * _)} {.(_ * _ + _ * _)} Algebra.Dioid.right-distributivity = right-distributivity
+bool-dioid : Dioid Bool _≡_
+bool-dioid = record
+  { zero = false
+  ; one  = true
+  ; _+_  = _or_
+  ; _*_  = _and_
+  ; reflexivity  = reflexivity
+  ; symmetry     = symmetry
+  ; transitivity = transitivity
+
+  ; +left-congruence  = or-left-congruence
+  ; +right-congruence = or-right-congruence
+  ; *left-congruence  = and-left-congruence
+  ; *right-congruence = and-right-congruence
+
+  ; +idempotence   = or-idempotence
+  ; +commutativity = or-commutativity
+  ; +associativity = or-associativity
+  ; +zero-identity = or-false-identity
+
+  ; *associativity  = and-associativity
+  ; *left-zero      = λ {r} → reflexivity
+  ; *right-zero     = and-right-false
+  ; *left-identity  = and-left-true
+  ; *right-identity = and-right-true
+
+  ; left-distributivity  = left-distributivity
+  ; right-distributivity = right-distributivity
+  }
