@@ -153,7 +153,6 @@ graph-laws {x = x} {.x} Graph.reflexivity = reflexivity
 graph-laws {x = x} {y} (Graph.symmetry eq) = symmetry (graph-laws eq)
 graph-laws {x = x} {y} (Graph.transitivity eq eq₁) = transitivity (graph-laws eq) (graph-laws eq₁)
 graph-laws {x = .(_ Graph.+ _)} {.(_ Graph.+ _)} (Graph.+left-congruence eq)  = left-congruence (graph-laws eq)
-graph-laws {x = .(_ Graph.+ _)} {.(_ Graph.+ _)} (Graph.+right-congruence eq) = right-congruence (graph-laws eq)
 graph-laws {x = .(_ Graph.* _)} {.(_ Graph.* _)} (Graph.*left-congruence eq)  = left-congruence (graph-laws eq)
 graph-laws {x = .(_ Graph.* _)} {.(_ Graph.* _)} (Graph.*right-congruence eq) = right-congruence (graph-laws eq)
 graph-laws {x = .(_ Graph.+ _)} {.(_ Graph.+ _)} Graph.+commutativity = zero-commutativity
