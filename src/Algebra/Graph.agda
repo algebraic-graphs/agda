@@ -21,7 +21,7 @@ data _≡_ {A} : (x y : Graph A) -> Set where
 
     -- Congruence
     +left-congruence  : ∀ {x y z : Graph A} -> x ≡ y -> x + z ≡ y + z
-    +right-congruence : ∀ {x y z : Graph A} -> x ≡ y -> z + x ≡ z + y
+    -- +right-congruence holds as a theorem, please see below
     *left-congruence  : ∀ {x y z : Graph A} -> x ≡ y -> x * z ≡ y * z
     *right-congruence : ∀ {x y z : Graph A} -> x ≡ y -> z * x ≡ z * y
 
@@ -38,6 +38,9 @@ data _≡_ {A} : (x y : Graph A) -> Set where
     left-distributivity  : ∀ {x y z : Graph A} -> x * (y + z) ≡ x * y + x * z
     right-distributivity : ∀ {x y z : Graph A} -> (x + y) * z ≡ x * z + y * z
     decomposition        : ∀ {x y z : Graph A} -> x * y * z   ≡ x * y + x * z + y * z
+
++right-congruence : ∀ {A} {x y z : Graph A} -> x ≡ y -> z + x ≡ z + y
++right-congruence {_} {x} {y} {z} eq = transitivity +commutativity (transitivity (+left-congruence eq) +commutativity)
 
 -- Subgraph relation
 _⊆_ : ∀ {A} -> Graph A -> Graph A -> Set
