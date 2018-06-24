@@ -60,3 +60,15 @@ biclique xs ys = connect (vertices xs) (vertices ys)
 star : ∀ {A} -> A -> List A -> Graph A
 star x ys = connect (vertex x) (vertices ys)
 
+-- Replace all overlays with connects, essentially producing something similar
+-- to a transitive closure, but not exactly it.
+-- This is a cruel function: I added it to demonstrate that from x ≡ y we cannot
+-- in general conclude that f x ≡ f y. Indeed:
+--                 x ≡ x + x
+--           close x ≡ x
+--     close (x + x) ≡ x * x
+close : ∀ {A} -> Graph A -> Graph A
+close ε       = ε
+close (v x)   = v x
+close (x + y) = x * y
+close (x * y) = x * y
