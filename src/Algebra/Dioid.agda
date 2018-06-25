@@ -12,7 +12,7 @@ record Dioid A (_≡_ : A -> A -> Set) : Set where
     transitivity : ∀ {r s t : A} -> r ≡ s -> s ≡ t -> r ≡ t
 
     +left-congruence  : ∀ {r s t : A} -> r ≡ s -> (r + t) ≡ (s + t)
-    +right-congruence : ∀ {r s t : A} -> r ≡ s -> (t + r) ≡ (t + s)
+    -- +right-congruence holds but as a theorem, please see below
     *left-congruence  : ∀ {r s t : A} -> r ≡ s -> (r * t) ≡ (s * t)
     *right-congruence : ∀ {r s t : A} -> r ≡ s -> (t * r) ≡ (t * s)
 
@@ -36,3 +36,9 @@ record Dioid A (_≡_ : A -> A -> Set) : Set where
 
   times : A -> A -> A
   times x y = x * y
+
++right-congruence : ∀ {D eq} {d : Dioid D eq} {r s t : D} -> eq r s -> eq (Dioid.plus d t r) (Dioid.plus d t s)
++right-congruence {_} {_} {d} {r} {s} {t} e = trans commut (trans (Dioid.+left-congruence d e) commut)
+  where
+    trans = Dioid.transitivity d
+    commut = Dioid.+commutativity d

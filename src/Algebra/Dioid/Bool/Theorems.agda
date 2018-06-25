@@ -90,7 +90,6 @@ bool-dioid = record
   ; transitivity = transitivity
 
   ; +left-congruence  = or-left-congruence
-  ; +right-congruence = or-right-congruence
   ; *left-congruence  = and-left-congruence
   ; *right-congruence = and-right-congruence
 
