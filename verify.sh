@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
 rm -rf index.agda;
 echo "module index where" >> index.agda;
 for i in $( find src -name "*.agda" | sed 's/src\/\(.*\)\.agda/\1/' | sed 's/\//\./g' | sort ); do
